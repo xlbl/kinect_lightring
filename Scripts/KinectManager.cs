@@ -1,55 +1,70 @@
-using UnityEngine;
-using Windows.Kinect;
+using UnityEngine;//导入Unity引擎
+using Windows.Kinect;//导入Kinect2.0的SDK
 
-public class KinectManager : MonoBehaviour
+public class KinectManager : MonoBehaviour  //定义KinectManager类，继承自MonoBehaviour
 {
-    private KinectSensor sensor;
-    private BodyFrameReader bodyFrameReader;
-    private Body[] bodies = null;
+    private KinectSensor sensor; //定义KinectSensor对象
 
-    void Start()
+    private BodyFrameReader bodyFrameReader;  //定义BodyFrameReader对象
+
+    private Body[] bodies = null;  //定义Body数组
+
+
+    void Start()  //定义Start方法
     {
-        sensor = KinectSensor.GetDefault();
-        if (sensor != null)
+        sensor = KinectSensor.GetDefault();  //获取默认的KinectSensor对象
+
+        if (sensor != null)  //如果KinectSensor对象不为空
+
         {
-            bodyFrameReader = sensor.BodyFrameSource.OpenReader();
-            sensor.Open();
+            bodyFrameReader = sensor.BodyFrameSource.OpenReader();  //打开BodyFrameReader对象
+
+            sensor.Open(); //打开KinectSensor对象
+
         }
     }
 
-    void Update()
+    void Update() //定义Update方法
     {
-        if (bodyFrameReader != null)
+        if (bodyFrameReader != null)  //如果BodyFrameReader对象不为空
+
         {
-            var frame = bodyFrameReader.AcquireLatestFrame();
-            if (frame != null)
+            var frame = bodyFrameReader.AcquireLatestFrame(); //获取最新的BodyFrame对象
+
+            if (frame != null) //如果BodyFrame对象不为空
             {
-                if (bodies == null)
+                if (bodies == null) //如果Body数组为空
                 {
-                    bodies = new Body[sensor.BodyFrameSource.BodyCount];
+                    bodies = new Body[sensor.BodyFrameSource.BodyCount]; //初始化Body数组
+
                 }
-                frame.GetAndRefreshBodyData(bodies);
-                frame.Dispose();
-                frame = null;
+                frame.GetAndRefreshBodyData(bodies); //获取BodyFrame对象的数据
+                frame.Dispose(); //释放BodyFrame对象
+                frame = null; //将BodyFrame对象置为空
             }
         }
     }
 
-    void OnApplicationQuit()
+    void OnApplicationQuit() //定义OnApplicationQuit方法
+
     {
-        if (bodyFrameReader != null)
+        if (bodyFrameReader != null) //如果BodyFrameReader对象不为空
         {
-            bodyFrameReader.Dispose();
-            bodyFrameReader = null;
+            bodyFrameReader.Dispose(); //释放BodyFrameReader对象
+
+            bodyFrameReader = null; //将BodyFrameReader对象置为空
         }
         
-        if (sensor != null)
+        if (sensor != null) //如果KinectSensor对象不为空
         {
-            if (sensor.IsOpen)
+            if (sensor.IsOpen) //如果KinectSensor对象已打开
+
             {
-                sensor.Close();
+                sensor.Close(); //关闭KinectSensor对象
+
             }
-            sensor = null;
+            sensor = null; //将KinectSensor对象置为空
+
         }
     }
 }
